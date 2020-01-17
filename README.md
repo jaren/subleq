@@ -11,3 +11,4 @@ https://en.wikipedia.org/wiki/One_instruction_set_computer
 | 31 30 | 29     20 | 19     10 | 9     0 |
 |  N/A  |     c     |     b     |     a   |
 -------------------------------------------
+- Instructions take 4 cycles to execute: Read instruction, Read a, Read b, and Write b + Update PC

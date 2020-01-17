@@ -5,7 +5,7 @@ import spinal.lib._
 
 class Subleq extends Component {
   val io = new Bundle {
-    val addr = out Bits(32 bits)
+    val addr = out Bits(10 bits)
     val writeEnable = out Bool
     val writeData = out Bits(32 bits)
     val readData = in Bits(32 bits)
@@ -37,19 +37,19 @@ class Subleq extends Component {
   io.writeEnable := state === 3
   io.writeData := (bVal.asSInt - aVal.asSInt).asBits
 
-  val pcVal = UInt(32 bits)
+  val pcVal = UInt(10 bits)
   val programCounter = RegNextWhen(pcVal, state === 3) init(0)
   pcVal := programCounter + 1
   when (bVal.asSInt <= 0) {
-    pcVal := c.resize(32 bits).asUInt
+    pcVal := c.asUInt
   }
 
   io.addr := pcVal.asBits
   when (state === 1) {
-    io.addr := a.resize(32 bits)
+    io.addr := a
   }
   when (state === 2 | state === 3) {
-    io.addr := b.resize(32 bits)
+    io.addr := b
   }
 
 }
