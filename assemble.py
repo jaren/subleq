@@ -3,7 +3,8 @@ import argparse, re, sys
 
 memsize = 10
 
-parser = argparse.ArgumentParser(description='Assemble subleq code')
+parser = argparse.ArgumentParser(description='Assemble subleq code, defaults to binary output')
+parser.add_argument("--hex", help="Output in hex for loading in Verilog", required=False, action="store_true")
 parser.add_argument("infile")
 parser.add_argument("outfile")
 
@@ -45,7 +46,7 @@ for line in parsetext:
     if number.match(line):
         i = int(line)
         # Split into bytes and append
-        memvals.extend(split32(i))
+        memvals.append(i)
         #print(line)
         #print(split32(i))
         index += 1
@@ -61,7 +62,7 @@ for line in parsetext:
                 print(f"Memory address out of range: {params[i]}")
                 sys.exit(1)
         val = params[0] | (params[1] << 10) | (params[2] << 20)
-        memvals.extend(split32(val))
+        memvals.append(val)
         #print(line)
         #print(split32(val))
         index += 1
@@ -70,5 +71,10 @@ for line in parsetext:
 if len(memvals) < 2**memsize:
     memvals.extend([0] * (2**memsize - len(memvals)))
 
-with open(args.outfile, "wb") as f:
-    f.write(bytearray(memvals))
+if not args.hex:
+    with open(args.outfile, "wb") as f:
+        bytevals = [item for val in memvals for item in split32(val)]
+        f.write(bytearray(bytevals))
+else:
+    with open(args.outfile, "w") as f:
+        f.write("\n".join(["%08x" % x for x in memvals]))

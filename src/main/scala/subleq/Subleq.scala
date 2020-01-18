@@ -37,14 +37,14 @@ class Subleq extends Component {
   io.writeEnable := state === 3
   io.writeData := (bVal.asSInt - aVal.asSInt).asBits
 
-  val pcVal = UInt(10 bits)
-  val programCounter = RegNextWhen(pcVal, state === 3) init(0)
-  pcVal := programCounter + 1
+  val nextPC = UInt(10 bits)
+  val programCounter = RegNextWhen(nextPC, state === 3) init(0)
+  nextPC := programCounter + 1
   when (bVal.asSInt <= 0) {
-    pcVal := c.asUInt
+    nextPC := c.asUInt
   }
 
-  io.addr := pcVal.asBits
+  io.addr := programCounter.asBits
   when (state === 1) {
     io.addr := a
   }

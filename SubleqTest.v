@@ -1,3 +1,4 @@
+`include "Subleq.v"
 module SubleqTest;
 
 reg [31:0] mem [1023:0];
@@ -10,21 +11,25 @@ wire [31:0] readData;
 reg clk = 0;
 reg reset = 1;
 
-always #5 clk = ~clk;
-always #5 reset = 0;
+always #2 clk = ~clk;
+always #2 reset = 0;
 
 Subleq subleq(addr, writeEnable, writeData, readData, clk, reset);
 
-assign readData = mem[readData];
+assign readData = mem[addr];
 
 always @ (posedge clk) begin
   if  (writeEnable == 1) begin
-    mem[addr] = writeData;
+    mem[addr] <= writeData;
+    // Probably not the best way but eh
+    $writememh("test/output.hex", mem);
   end
 end
 
 initial begin
-  $dumpfile("tmp/TestDump.vcd");
+  $dumpfile("test/dump.vcd");
   $dumpvars;
-  $readmemb("tmp/TestMemInput.bin", mem);
-  $writememb("tmp/TestMemOutput.bin", mem);
+  $readmemh("test/input.hex", mem);
+end
+
+endmodule
