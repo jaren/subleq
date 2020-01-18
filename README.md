@@ -12,3 +12,15 @@ https://en.wikipedia.org/wiki/One_instruction_set_computer
 |  N/A  |     c     |     b     |     a   |
 -------------------------------------------
 - Instructions take 4 cycles to execute: Read instruction, Read a, Read b, and Write b + Update PC
+
+# Assembler Spec
+- Assemble with `assemble.py`
+- Pseudoinstructions:
+ * subleq A B : Mem[B] = Mem[B] - Mem[A]
+- Assembly format:
+ * Lines may contain either a label, subleq instruction, comment, 32-bit literal, or pseudoinstruction
+ * Comments begin with //
+ * Labels are in the format "LABELNAME:"
+ * Literals are a signed decimal number
+ * Subleq and pseudoinstructions must include 10-bit literals or label names as their parameters
+- See test files for examples

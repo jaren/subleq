@@ -18,7 +18,7 @@ Subleq subleq(addr, writeEnable, writeData, readData, clk, reset);
 assign readData = mem[readData];
 
 always @ (posedge clk) begin
-  if  (wen == 1) begin
+  if  (writeEnable == 1) begin
     mem[addr] = writeData;
   end
 end
